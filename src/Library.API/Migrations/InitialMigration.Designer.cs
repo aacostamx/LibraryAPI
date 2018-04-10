@@ -19,7 +19,7 @@ namespace Library.API.Migrations
 
             modelBuilder.Entity("Library.API.Entities.Author", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<DateTimeOffset>("DateOfBirth");
@@ -43,10 +43,10 @@ namespace Library.API.Migrations
 
             modelBuilder.Entity("Library.API.Entities.Book", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("AuthorId");
+                    b.Property<Guid>("AuthorId");
 
                     b.Property<string>("Description")
                         .HasAnnotation("MaxLength", 500);

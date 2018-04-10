@@ -52,7 +52,7 @@ namespace Library.API.Controllers
 
         [HttpGet("({ids})", Name="GetAuthorCollection")]
         public IActionResult GetAuthorCollection(
-            [ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<int> ids)
+            [ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<Guid> ids)
         {           
             if (ids == null)
             {

@@ -29,7 +29,7 @@ namespace Library.API.Controllers
         }
 
         [HttpGet("{id}", Name ="GetAuthor")]
-        public IActionResult GetAuthor(int id)
+        public IActionResult GetAuthor(Guid id)
         {
             var authorFromRepo = _libraryRepository.GetAuthor(id);
 
@@ -57,6 +57,7 @@ namespace Library.API.Controllers
             if (!_libraryRepository.Save())
             {
                 throw new Exception("Creating an author failed on save.");
+               // return StatusCode(500, "A problem happened with handling your request.");
             }
 
             var authorToReturn = Mapper.Map<AuthorDto>(authorEntity);
@@ -67,7 +68,7 @@ namespace Library.API.Controllers
         }
 
         [HttpPost("{id}")]
-        public IActionResult BlockAuthorCreation(int id)
+        public IActionResult BlockAuthorCreation(Guid id)
         {
             if (_libraryRepository.AuthorExists(id))
             {
@@ -78,7 +79,7 @@ namespace Library.API.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteAuthor(int id)
+        public IActionResult DeleteAuthor(Guid id)
         {
             var authorFromRepo = _libraryRepository.GetAuthor(id);
             if (authorFromRepo == null)

@@ -25,7 +25,7 @@ namespace Library.API.Controllers
         }
 
         [HttpGet()]
-        public IActionResult GetBooksForAuthor(int authorId)
+        public IActionResult GetBooksForAuthor(Guid authorId)
         {
             if (!_libraryRepository.AuthorExists(authorId))
             {
@@ -40,7 +40,7 @@ namespace Library.API.Controllers
         }
 
         [HttpGet("{id}", Name = "GetBookForAuthor")]
-        public IActionResult GetBookForAuthor(int authorId, int id)
+        public IActionResult GetBookForAuthor(Guid authorId, Guid id)
         {
             if (!_libraryRepository.AuthorExists(authorId))
             {
@@ -58,7 +58,7 @@ namespace Library.API.Controllers
        }
 
         [HttpPost()]
-        public IActionResult CreateBookForAuthor(int authorId, 
+        public IActionResult CreateBookForAuthor(Guid authorId, 
             [FromBody] BookForCreationDto book)
         {
             if (book == null)
@@ -74,6 +74,7 @@ namespace Library.API.Controllers
 
             if (!ModelState.IsValid)
             {
+                // return 422
                 return new UnprocessableEntityObjectResult(ModelState);
             }
 
@@ -99,7 +100,7 @@ namespace Library.API.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteBookForAuthor(int authorId, int id)
+        public IActionResult DeleteBookForAuthor(Guid authorId, Guid id)
         {
             if (!_libraryRepository.AuthorExists(authorId))
             {
@@ -125,7 +126,7 @@ namespace Library.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateBookForAuthor(int authorId, int id,
+        public IActionResult UpdateBookForAuthor(Guid authorId, Guid id,
             [FromBody] BookForUpdateDto book)
         {
             if (book == null)
@@ -183,7 +184,7 @@ namespace Library.API.Controllers
         }
 
         [HttpPatch("{id}")]
-        public IActionResult PartiallyUpdateBookForAuthor(int authorId, int id,
+        public IActionResult PartiallyUpdateBookForAuthor(Guid authorId, Guid id,
             [FromBody] JsonPatchDocument<BookForUpdateDto> patchDoc)
         {
             if (patchDoc == null)
@@ -235,6 +236,8 @@ namespace Library.API.Controllers
             var bookToPatch = Mapper.Map<BookForUpdateDto>(bookForAuthorFromRepo);
 
             patchDoc.ApplyTo(bookToPatch, ModelState);
+
+            // patchDoc.ApplyTo(bookToPatch);
 
             if (bookToPatch.Description == bookToPatch.Title)
             {

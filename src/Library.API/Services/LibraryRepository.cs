@@ -16,19 +16,29 @@ namespace Library.API.Services
 
         public void AddAuthor(Author author)
         {
+            author.Id = Guid.NewGuid();
             _context.Authors.Add(author);
+
+            if (author.Books.Any())
+            {
+                foreach (var book in author.Books)
+                    book.Id = Guid.NewGuid();
+            }
         }
 
-        public void AddBookForAuthor(int authorId, Book book)
+        public void AddBookForAuthor(Guid authorId, Book book)
         {
             var author = GetAuthor(authorId);
             if (author != null)
             {
+                if (book.Id == Guid.Empty)
+                    book.Id = Guid.NewGuid();
+
                 author.Books.Add(book);
             }
         }
 
-        public bool AuthorExists(int authorId)
+        public bool AuthorExists(Guid authorId)
         {
             return _context.Authors.Any(a => a.Id == authorId);
         }
@@ -43,7 +53,7 @@ namespace Library.API.Services
             _context.Books.Remove(book);
         }
 
-        public Author GetAuthor(int authorId)
+        public Author GetAuthor(Guid authorId)
         {
             return _context.Authors.FirstOrDefault(a => a.Id == authorId);
         }
@@ -51,25 +61,33 @@ namespace Library.API.Services
         public IEnumerable<Author> GetAuthors()
         {
             return _context.Authors
+                .OrderBy(a => a.FirstName)
+                .ThenBy(a => a.LastName)
                 .ToList();
         }
 
-        public IEnumerable<Author> GetAuthors(IEnumerable<int> authorIds)
+        public IEnumerable<Author> GetAuthors(IEnumerable<Guid> authorIds)
         {
             return _context.Authors.Where(a => authorIds.Contains(a.Id))
+                .OrderBy(a => a.FirstName)
+                .OrderBy(a => a.LastName)
                 .ToList();
         }
 
         public void UpdateAuthor(Author author) { }
 
-        public Book GetBookForAuthor(int authorId, int bookId)
+        public Book GetBookForAuthor(Guid authorId, Guid bookId)
         {
-            return _context.Books.Where(b => b.AuthorId == authorId && b.Id == bookId).FirstOrDefault();
+            return _context.Books
+              .Where(b => b.AuthorId == authorId && b.Id == bookId)
+              .FirstOrDefault();
         }
 
-        public IEnumerable<Book> GetBooksForAuthor(int authorId)
+        public IEnumerable<Book> GetBooksForAuthor(Guid authorId)
         {
-            return _context.Books.Where(b => b.AuthorId == authorId).OrderBy(b => b.Title).ToList();
+            return _context.Books
+                .Where(b => b.AuthorId == authorId)
+                .OrderBy(b => b.Title).ToList();
         }
 
         public void UpdateBookForAuthor(Book book) { }
