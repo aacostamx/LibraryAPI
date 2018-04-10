@@ -60,18 +60,12 @@ namespace Library.API.Services
 
         public IEnumerable<Author> GetAuthors()
         {
-            return _context.Authors
-                .OrderBy(a => a.FirstName)
-                .ThenBy(a => a.LastName)
-                .ToList();
+            return _context.Authors.ToList();
         }
 
         public IEnumerable<Author> GetAuthors(IEnumerable<Guid> authorIds)
         {
-            return _context.Authors.Where(a => authorIds.Contains(a.Id))
-                .OrderBy(a => a.FirstName)
-                .OrderBy(a => a.LastName)
-                .ToList();
+            return _context.Authors.Where(a => authorIds.Contains(a.Id)).ToList();
         }
 
         public void UpdateAuthor(Author author) { }
